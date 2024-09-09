@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -17,13 +18,15 @@ import (
 var key = []byte("secret")
 
 func main() {
-	dbUser := "postgres"  // os.Getenv("POSTGRES_USER")
-	dbPassword := "admin" // os.Getenv("POSTGRES_PASSWORD")
-	dbName := "postgres"  // os.Getenv("POSTGRES_NAME")
+	dbUser := os.Getenv("POSTGRES_USER")
+	dbPassword := os.Getenv("POSTGRES_PASSWORD")
+	dbName := os.Getenv("POSTGRES_NAME")
 
-	db, err := sql.Open("postgres",
-		fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=disable",
-			dbUser, dbPassword, dbName))
+	dst := fmt.Sprintf("postgres://%s:%s@%s:5432/%s?sslmode=disable",
+		dbUser, dbPassword, "db", dbName)
+	fmt.Println(dst)
+
+	db, err := sql.Open("postgres", dst)
 	if err != nil {
 		fmt.Println(err)
 	}
